@@ -1,0 +1,40 @@
+:root {
+  --sidebar-width: 230px; --sidebar-collapsed: 60px;
+  --sidebar-bg: #1a1f2e; --sidebar-text: #b0b8cc;
+  --sidebar-hover: #2d3450; --sidebar-active: #0d6efd;
+}
+body { background:#f4f6fb; font-family:'Segoe UI',sans-serif; }
+.sidebar {
+  position:fixed; top:0; left:0; height:100vh; width:var(--sidebar-width);
+  background:var(--sidebar-bg); transition:width .3s ease;
+  overflow:hidden; z-index:1030; display:flex; flex-direction:column;
+}
+.sidebar.collapsed { width:var(--sidebar-collapsed); }
+.sidebar:hover     { width:var(--sidebar-width); }
+.sidebar-brand     { padding:18px 16px; color:white; white-space:nowrap; display:flex; align-items:center; }
+.sidebar-nav       { padding:0 8px; flex:1; display:flex; flex-direction:column; }
+.sidebar-nav li    { margin-bottom:4px; }
+.sidebar-link      { display:flex; align-items:center; gap:12px; padding:10px;
+  border-radius:8px; color:var(--sidebar-text); text-decoration:none; white-space:nowrap; transition:all .2s; }
+.sidebar-link:hover{ background:var(--sidebar-hover); color:white; }
+.sidebar-link.active{ background:var(--sidebar-active); color:white; }
+.sidebar-label     { font-size:.875rem; }
+.sidebar.collapsed .sidebar-label { opacity:0; pointer-events:none; }
+.sidebar:hover .sidebar-label     { opacity:1; }
+.main-wrapper      { margin-left:var(--sidebar-width); transition:margin-left .3s; min-height:100vh; display:flex; flex-direction:column; }
+.main-wrapper.sidebar-collapsed { margin-left:var(--sidebar-collapsed); }
+.topbar            { background:white; border-bottom:1px solid #e0e6ef; height:56px; position:sticky; top:0; z-index:1020; }
+.footer            { margin-top:auto; background:white; }
+.stat-card,.job-card { border:none; border-radius:12px; background:white; box-shadow:0 2px 12px rgba(0,0,0,.06); transition:transform .2s,box-shadow .2s; }
+.stat-card:hover,.job-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+.stat-icon         { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; }
+.auth-card         { max-width:440px; margin:0 auto; border:none; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,.1); }
+.period-content    { display:none; }
+.period-content.active { display:flex; }
+.badge-pill        { border-radius:30px; font-weight:500; }
+@media(max-width:767.98px){
+  .sidebar { width:var(--sidebar-collapsed); }
+  .sidebar:hover { width:var(--sidebar-width); }
+  .main-wrapper { margin-left:var(--sidebar-collapsed); }
+  .main-wrapper.sidebar-collapsed { margin-left:0; }
+}

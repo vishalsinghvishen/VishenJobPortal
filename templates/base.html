@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Vishen JobPortal{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+<!-- SIDEBAR (only rendered when logged in) -->
+{% if session.user_id %}
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <i class="fas fa-briefcase fa-lg"></i>
+    <span class="sidebar-label ms-2 fw-bold">Vishen JobPortal</span>
+  </div>
+  <hr class="text-secondary mx-2">
+  <ul class="sidebar-nav list-unstyled">
+    {% if session.role == 'admin' %}
+      <li>
+        <a href="{{ url_for('dashboard') }}" class="sidebar-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+          <i class="fas fa-tachometer-alt fa-fw"></i>
+          <span class="sidebar-label">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('admin_jobs') }}" class="sidebar-link {% if request.endpoint == 'admin_jobs' %}active{% endif %}">
+          <i class="fas fa-file-alt fa-fw"></i>
+          <span class="sidebar-label">Manage Jobs</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('admin_employers') }}" class="sidebar-link {% if request.endpoint == 'admin_employers' %}active{% endif %}">
+          <i class="fas fa-building fa-fw"></i>
+          <span class="sidebar-label">Employers</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('admin_jobseekers') }}" class="sidebar-link {% if request.endpoint == 'admin_jobseekers' %}active{% endif %}">
+          <i class="fas fa-users fa-fw"></i>
+          <span class="sidebar-label">Jobseekers</span>
+        </a>
+      </li>
+    {% elif session.role == 'employer' %}
+      <li>
+        <a href="{{ url_for('dashboard') }}" class="sidebar-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+          <i class="fas fa-tachometer-alt fa-fw"></i>
+          <span class="sidebar-label">My Jobs</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('post_job') }}" class="sidebar-link {% if request.endpoint == 'post_job' %}active{% endif %}">
+          <i class="fas fa-plus-circle fa-fw"></i>
+          <span class="sidebar-label">Post a Job</span>
+        </a>
+      </li>
+    {% else %}
+      <li>
+        <a href="{{ url_for('dashboard') }}" class="sidebar-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+          <i class="fas fa-search fa-fw"></i>
+          <span class="sidebar-label">Browse Jobs</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('my_applications') }}" class="sidebar-link {% if request.endpoint == 'my_applications' %}active{% endif %}">
+          <i class="fas fa-clipboard-list fa-fw"></i>
+          <span class="sidebar-label">My Applications</span>
+        </a>
+      </li>
+      <li>
+        <a href="{{ url_for('profile') }}" class="sidebar-link {% if request.endpoint == 'profile' %}active{% endif %}">
+          <i class="fas fa-user-cog fa-fw"></i>
+          <span class="sidebar-label">Profile</span>
+        </a>
+      </li>
+    {% endif %}
+    <li class="mt-auto pt-3">
+      <a href="{{ url_for('logout') }}" class="sidebar-link text-danger">
+        <i class="fas fa-sign-out-alt fa-fw"></i>
+        <span class="sidebar-label">Logout</span>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endif %}
+
+<!-- TOPBAR (only when logged in) -->
+{% if session.user_id %}
+<div class="main-wrapper" id="mainWrapper">
+  <nav class="topbar navbar px-3">
+    <button class="btn btn-sm btn-outline-secondary me-3" id="sidebarToggle">
+      <i class="fas fa-bars"></i>
+    </button>
+    <span class="navbar-brand fw-bold text-primary">
+      <i class="fas fa-briefcase me-1"></i>Vishen JobPortal
+    </span>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <span class="badge text-uppercase
+        {% if session.role == 'admin' %}bg-danger
+        {% elif session.role == 'employer' %}bg-primary
+        {% else %}bg-success
+        {% endif %}">{{ session.role }}</span>
+      <span class="d-none d-md-inline text-muted small">{{ session.name }}</span>
+      <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline-danger ms-2">
+        <i class="fas fa-sign-out-alt"></i>
+      </a>
+    </div>
+  </nav>
+{% else %}
+<!-- PUBLIC NAVBAR -->
+<div id="publicWrapper">
+  <nav class="navbar navbar-dark bg-primary px-4">
+    <a class="navbar-brand fw-bold" href="/">
+      <i class="fas fa-briefcase me-2"></i>Vishen JobPortal
+    </a>
+    <div class="ms-auto">
+      <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm me-2">Login</a>
+      <a href="{{ url_for('register') }}" class="btn btn-light btn-sm">Register</a>
+    </div>
+  </nav>
+{% endif %}
+
+  <!-- FLASH MESSAGES -->
+  <div class="{% if session.user_id %}container-fluid px-4{% else %}container{% endif %} mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="alert alert-{{ cat }} alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- ══ SINGLE CONTENT BLOCK ══ -->
+  <main class="{% if session.user_id %}container-fluid px-4{% else %}container{% endif %} py-3">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer text-center text-muted small py-3 border-top">
+    &copy; 2024 Vishen JobPortal &mdash; All rights reserved.
+  </footer>
+
+</div><!-- closes main-wrapper or publicWrapper -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const wrapper = document.getElementById('mainWrapper');
+  const toggle  = document.getElementById('sidebarToggle');
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('collapsed');
+      wrapper.classList.toggle('sidebar-collapsed');
+    });
+  }
+  if (window.innerWidth < 768 && sidebar) {
+    sidebar.classList.add('collapsed');
+    if (wrapper) wrapper.classList.add('sidebar-collapsed');
+  }
+</script>
+
+</body>
+</html>

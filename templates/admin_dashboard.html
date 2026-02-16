@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h4 class="fw-bold mb-0">Admin Dashboard</h4>
+    <p class="text-muted small mb-0">Overview of platform activity</p>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-4">
+    <div class="card stat-card p-3 d-flex flex-row align-items-center gap-3">
+      <div class="stat-icon bg-primary bg-opacity-10"><i class="fas fa-briefcase text-primary"></i></div>
+      <div><div class="fw-bold fs-4">{{ totals.jobs }}</div><div class="text-muted small">Total Jobs</div></div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card stat-card p-3 d-flex flex-row align-items-center gap-3">
+      <div class="stat-icon bg-info bg-opacity-10"><i class="fas fa-building text-info"></i></div>
+      <div><div class="fw-bold fs-4">{{ totals.employers }}</div><div class="text-muted small">Total Employers</div></div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card stat-card p-3 d-flex flex-row align-items-center gap-3">
+      <div class="stat-icon bg-success bg-opacity-10"><i class="fas fa-users text-success"></i></div>
+      <div><div class="fw-bold fs-4">{{ totals.jobseekers }}</div><div class="text-muted small">Total Jobseekers</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-3 p-4 mb-4">
+  <h5 class="fw-bold mb-3">Activity by Period</h5>
+  <ul class="nav nav-pills mb-4" id="periodTabs">
+    <li class="nav-item"><button class="nav-link active" data-period="daily">Daily</button></li>
+    <li class="nav-item"><button class="nav-link" data-period="weekly">Weekly</button></li>
+    <li class="nav-item"><button class="nav-link" data-period="monthly">Monthly</button></li>
+    <li class="nav-item"><button class="nav-link" data-period="yearly">Yearly</button></li>
+  </ul>
+  {% for period, data in stats.items() %}
+  <div class="row g-3 period-content {% if period == 'daily' %}active{% endif %}" id="period-{{ period }}">
+    <div class="col-sm-4">
+      <div class="card stat-card p-3 text-center">
+        <div class="fw-bold fs-3 text-primary">{{ data.jobs }}</div>
+        <div class="text-muted small">Jobs Posted</div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card stat-card p-3 text-center">
+        <div class="fw-bold fs-3 text-info">{{ data.employers }}</div>
+        <div class="text-muted small">New Employers</div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="card stat-card p-3 text-center">
+        <div class="fw-bold fs-3 text-success">{{ data.jobseekers }}</div>
+        <div class="text-muted small">New Jobseekers</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-3">
+  <div class="col-sm-4">
+    <a href="{{ url_for('admin_jobs') }}" class="btn btn-outline-primary w-100 py-3">
+      <i class="fas fa-file-alt fa-lg d-block mb-1"></i>Manage Jobs
+    </a>
+  </div>
+  <div class="col-sm-4">
+    <a href="{{ url_for('admin_employers') }}" class="btn btn-outline-info w-100 py-3">
+      <i class="fas fa-building fa-lg d-block mb-1"></i>Manage Employers
+    </a>
+  </div>
+  <div class="col-sm-4">
+    <a href="{{ url_for('admin_jobseekers') }}" class="btn btn-outline-success w-100 py-3">
+      <i class="fas fa-users fa-lg d-block mb-1"></i>Manage Jobseekers
+    </a>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('#periodTabs .nav-link').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('#periodTabs .nav-link').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.period-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('period-' + this.dataset.period).classList.add('active');
+    });
+  });
+</script>
+{% endblock %}

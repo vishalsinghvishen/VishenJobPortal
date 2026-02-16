@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Register — JobPortal{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card auth-card p-4">
+      <div class="text-center mb-4">
+        <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px">
+          <i class="fas fa-user-plus fa-2x text-white"></i>
+        </div>
+        <h4 class="fw-bold">Create an account</h4>
+        <p class="text-muted small">Join JobPortal as an employer or jobseeker</p>
+      </div>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Full Name</label>
+          <input type="text" name="name" class="form-control" placeholder="John Doe" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email address</label>
+          <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Min 6 characters" required minlength="6">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold">I am a…</label>
+          <select name="role" class="form-select" id="roleSelect" required>
+            <option value="">Select role</option>
+            <option value="employer">Employer</option>
+            <option value="jobseeker">Jobseeker</option>
+          </select>
+        </div>
+        <div class="mb-4" id="companyField" style="display:none">
+          <label class="form-label fw-semibold">Company Name</label>
+          <input type="text" name="company" class="form-control" placeholder="Your company">
+        </div>
+        <button type="submit" class="btn btn-success w-100 py-2 fw-semibold">
+          <i class="fas fa-user-plus me-2"></i>Create Account
+        </button>
+      </form>
+      <hr>
+      <p class="text-center text-muted small mb-0">
+        Already have an account? <a href="{{ url_for('login') }}" class="text-primary fw-semibold">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('roleSelect').addEventListener('change', function () {
+    document.getElementById('companyField').style.display = this.value === 'employer' ? 'block' : 'none';
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Login — JobPortal{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card auth-card p-4">
+      <div class="text-center mb-4">
+        <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px">
+          <i class="fas fa-briefcase fa-2x text-white"></i>
+        </div>
+        <h4 class="fw-bold">Welcome back</h4>
+        <p class="text-muted small">Sign in to your JobPortal account</p>
+      </div>
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email address</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-envelope text-muted"></i></span>
+            <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="fas fa-lock text-muted"></i></span>
+            <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+          <i class="fas fa-sign-in-alt me-2"></i>Sign In
+        </button>
+      </form>
+      <hr>
+      <p class="text-center text-muted small mb-0">
+        Don't have an account? <a href="{{ url_for('register') }}" class="text-primary fw-semibold">Register here</a>
+      </p>
+      <div class="alert alert-info mt-3 mb-0 small">
+        <strong>Admin login:</strong> admin@jobportal.com / admin123
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

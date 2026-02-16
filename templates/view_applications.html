@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Applications — {{ job.title }}{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <a href="{{ url_for('dashboard') }}" class="text-muted text-decoration-none small">
+    <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+  </a>
+  <h4 class="fw-bold mt-2 mb-0">Applications for: {{ job.title }}</h4>
+  <p class="text-muted small">{{ job.location }} &bull; {{ job.job_type }}</p>
+</div>
+
+{% if applications %}
+<div class="card border-0 shadow-sm rounded-3">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Applicant</th><th>Email</th><th>Applied</th>
+          <th>Cover Letter</th><th>Status</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td class="fw-semibold">{{ app.name }}</td>
+          <td class="text-muted small">{{ app.email }}</td>
+          <td class="text-muted small">{{ app.applied_at[:10] }}</td>
+          <td class="small" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+            {{ app.cover_letter or '—' }}
+          </td>
+          <td>
+            {% if app.status == 'accepted' %}
+              <span class="badge bg-success">Accepted</span>
+            {% elif app.status == 'rejected' %}
+              <span class="badge bg-danger">Rejected</span>
+            {% else %}
+              <span class="badge bg-secondary">Pending</span>
+            {% endif %}
+          </td>
+          <td>
+            <form method="POST" action="{{ url_for('update_app_status', app_id=app.id, status='accepted') }}" class="d-inline">
+              <button class="btn btn-sm btn-success" {% if app.status == 'accepted' %}disabled{% endif %}>✓</button>
+            </form>
+            <form method="POST" action="{{ url_for('update_app_status', app_id=app.id, status='rejected') }}" class="d-inline">
+              <button class="btn btn-sm btn-danger" {% if app.status == 'rejected' %}disabled{% endif %}>✗</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+  <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+  <p class="text-muted">No applications received yet.</p>
+</div>
+{% endif %}
+{% endblock %}
